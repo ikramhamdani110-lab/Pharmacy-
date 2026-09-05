@@ -17,11 +17,25 @@ jobs:
       - name: Check out main
         uses: actions/checkout@v4
 
+      - name: Generate production database configuration
+        env:
+          PHARMA_DB_PASSWORD: ${{ secrets.PHARMA_DB_PASSWORD }}
+        run: |
+          test -n "$PHARMA_DB_PASSWORD"
+          cat > config/database.production.php <<'PHP'
+          <?php
+          $productionDbPassword = base64_decode('
+          PHP
+          printf '%s' "$PHARMA_DB_PASSWORD" | base64 -w 0 >> config/database.production.php
+          cat >> config/database.production.php <<'PHP'
+          ');
+          PHP
+
       - name: Deploy over FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ftpupload.net
-          username: ${{ secrets.INFINITYFREE_FTP_USERNAME }}
+          username: if0_42835805
           password: ${{ secrets.INFINITYFREE_FTP_PASSWORD }}
           protocol: ftp
           port: 21

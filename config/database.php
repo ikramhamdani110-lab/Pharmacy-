@@ -3,6 +3,14 @@ $host = getenv('PHARMA_DB_HOST') ?: 'localhost';
 $user = getenv('PHARMA_DB_USER') ?: 'root';
 $password = getenv('PHARMA_DB_PASSWORD') ?: '';
 $database = getenv('PHARMA_DB_NAME') ?: 'pharmacare_db';
+$productionConfig = __DIR__ . '/database.production.php';
+if (is_file($productionConfig)) {
+    require $productionConfig;
+    $password = $productionDbPassword;
+    $host = getenv('PHARMA_DB_HOST') ?: 'sql201.infinityfree.com';
+    $user = getenv('PHARMA_DB_USER') ?: 'if0_42835805';
+    $database = getenv('PHARMA_DB_NAME') ?: 'pharmasante';
+}
 
 mysqli_report(MYSQLI_REPORT_OFF);
 $conn = new mysqli($host, $user, $password, $database);
