@@ -8,6 +8,50 @@ function h($data) {
     return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 }
 
+function getSiteProfile($conn) {
+    $create = $conn->query("CREATE TABLE IF NOT EXISTS site_profile (
+        id TINYINT UNSIGNED NOT NULL PRIMARY KEY,
+        full_name VARCHAR(150) NOT NULL,
+        phone VARCHAR(30) NOT NULL,
+        email VARCHAR(150) NOT NULL,
+        location VARCHAR(200) NOT NULL,
+        bio VARCHAR(500) NOT NULL,
+        photo_path VARCHAR(255) DEFAULT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    if (!$create) {
+        error_log('PharmaSante site profile table setup failed: ' . $conn->error);
+        return array(
+            'full_name' => 'PharmaSanté',
+            'phone' => '+213 550 000 000',
+            'email' => 'contact@pharmacare.dz',
+            'location' => '123 Rue de la Santé, Alger, Algérie',
+            'bio' => 'Votre santé, notre priorité.',
+            'photo_path' => null
+        );
+    }
+
+    $result = $conn->query("SELECT * FROM site_profile WHERE id=1");
+    if ($result && ($row = $result->fetch_assoc())) {
+        return $row;
+    }
+
+    $defaults = array(
+        'full_name' => 'PharmaSanté',
+        'phone' => '+213 550 000 000',
+        'email' => 'contact@pharmacare.dz',
+        'location' => '123 Rue de la Santé, Alger, Algérie',
+        'bio' => 'Votre santé, notre priorité.',
+        'photo_path' => null
+    );
+    $stmt = $conn->prepare("INSERT INTO site_profile (id, full_name, phone, email, location, bio) VALUES (1, ?, ?, ?, ?, ?)");
+    if ($stmt) {
+        $stmt->bind_param("sssss", $defaults['full_name'], $defaults['phone'], $defaults['email'], $defaults['location'], $defaults['bio']);
+        $stmt->execute();
+    }
+    return $defaults;
+}
+
 function generateCsrfToken() {
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));

@@ -575,6 +575,14 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 }
 .section-card-header h2 { font-size: 1.1rem; font-weight: 800; color: var(--text-dark); }
 .section-card-header h2 i { color: var(--primary); margin-right: 8px; }
+
+.profile-editor-card { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+.profile-editor-preview { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; color: var(--text-muted); }
+.profile-editor-preview strong { color: var(--text-dark); font-size: 1.1rem; }
+.profile-photo { width: 132px; height: 132px; border-radius: 50%; object-fit: cover; border: 5px solid var(--primary-light); box-shadow: 0 10px 24px rgba(15, 42, 56, .14); }
+.profile-photo-placeholder { display: grid; place-items: center; background: var(--primary-light); color: var(--white); font-size: 3rem; }
+.profile-editor-form .form-grid { margin-bottom: 4px; }
+.form-help { display: block; margin-top: 6px; color: var(--text-light); font-size: .82rem; }
 .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
 /* =============================================
@@ -826,6 +834,7 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 .footer-brand h3 { color: var(--white); font-size: 1.2rem; margin-bottom: 8px; }
 .footer-brand h3 i { color: var(--accent); margin-right: 6px; }
 .footer-brand p { font-size: 0.9rem; opacity: 0.8; }
+.footer-profile-photo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); margin-bottom: 10px; }
 .footer-links h4, .footer-contact h4 { color: var(--accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
 .footer-links ul { list-style: none; }
 .footer-links ul li { margin-bottom: 8px; }
@@ -859,6 +868,7 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .feature-strip { grid-template-columns: 1fr; }
     .hero-content { grid-template-columns: 1fr; }
+    .profile-editor-card { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
     .main-nav { display: none; }

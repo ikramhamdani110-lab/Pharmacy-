@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS `caisse`;
 DROP TABLE IF EXISTS `medicament`;
 DROP TABLE IF EXISTS `patient`;
 DROP TABLE IF EXISTS `vendeur`;
+DROP TABLE IF EXISTS `site_profile`;
 
 CREATE TABLE `vendeur` (
     `id` INT NOT NULL AUTO_INCREMENT,
@@ -92,6 +93,22 @@ CREATE TABLE `password_resets` (
     INDEX `idx_token` (`token`),
     INDEX `idx_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `site_profile` (
+    `id` TINYINT UNSIGNED NOT NULL,
+    `full_name` VARCHAR(150) NOT NULL,
+    `phone` VARCHAR(30) NOT NULL,
+    `email` VARCHAR(150) NOT NULL,
+    `location` VARCHAR(200) NOT NULL,
+    `bio` VARCHAR(500) NOT NULL,
+    `photo_path` VARCHAR(255) DEFAULT NULL,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `site_profile` (`id`, `full_name`, `phone`, `email`, `location`, `bio`) VALUES
+(1, 'PharmaSanté', '+213 550 000 000', 'contact@pharmacare.dz',
+ '123 Rue de la Santé, Alger, Algérie', 'Votre santé, notre priorité.');
 
 SET FOREIGN_KEY_CHECKS = 1;
 

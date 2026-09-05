@@ -74,6 +74,7 @@ session_start();
 require_once 'config/database.php';
 require_once 'includes/functions.php';
 requireAdmin();
+$siteProfile = getSiteProfile($conn);
 include 'header.php';
 
 $period   = trim($_GET['period']   ?? 'month');
@@ -189,9 +190,9 @@ $rankColors = ['r1','r2','r3','r4','r5'];
 
         <!-- Print-only header -->
         <div class="print-header">
-            <h1><i class="fas fa-pills"></i> PharmaSanté</h1>
-            <p>Votre santé, notre priorité</p>
-            <p>123 Rue de la Santé, Alger, Algérie &nbsp;|&nbsp; contact@pharmacare.dz</p>
+            <h1><i class="fas fa-pills"></i> <?php echo h($siteProfile['full_name']); ?></h1>
+            <p><?php echo h($siteProfile['bio']); ?></p>
+            <p><?php echo h($siteProfile['location']); ?> &nbsp;|&nbsp; <?php echo h($siteProfile['email']); ?> &nbsp;|&nbsp; <?php echo h($siteProfile['phone']); ?></p>
             <p style="font-size:15px;font-weight:700;margin-top:8px;">RAPPORT DES VENTES — <?php echo strtoupper($periodLabel); ?></p>
             <p>Édité le <?php echo date('d/m/Y à H:i'); ?> par <?php echo h($_SESSION['user_name']); ?></p>
         </div>

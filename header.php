@@ -34,6 +34,7 @@ $userName = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
                 <a href="gestion_vendeur.php"><i class="fas fa-user-tie"></i> Vendeurs</a>
                 <a href="gestion_medicament.php"><i class="fas fa-pills"></i> Médicaments</a>
                 <a href="gestion_caisse.php"><i class="fas fa-cash-register"></i> Caisses</a>
+                <a href="admin_profile.php"><i class="fas fa-address-card"></i> Profil</a>
                 <a href="liste_vente.php"><i class="fas fa-receipt"></i> Ventes</a>
                 <a href="admin_patients.php"><i class="fas fa-users"></i> Patients</a>
                 <a href="logout.php" class="btn-nav btn-danger-nav"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>

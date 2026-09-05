@@ -43,6 +43,7 @@ $recentSales = mysqli_query($conn, "
             <a href="gestion_vendeur.php"><i class="fas fa-user-tie"></i> Gérer les Vendeurs</a>
             <a href="gestion_medicament.php"><i class="fas fa-pills"></i> Gérer les Médicaments</a>
             <a href="gestion_caisse.php"><i class="fas fa-cash-register"></i> Gérer les Caisses</a>
+            <a href="admin_profile.php"><i class="fas fa-address-card"></i> Profil / Informations</a>
             <a href="liste_vente.php"><i class="fas fa-receipt"></i> Toutes les Ventes</a>
             <a href="admin_patients.php"><i class="fas fa-users"></i> Voir les Patients</a>
             <a href="vendeur_dashboard.php"><i class="fas fa-eye"></i> Vue Vendeur</a>
