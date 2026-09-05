@@ -89,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" action="register_patient.php" onsubmit="return validateRegistrationForm(this)">
+            <?php echo csrfField(); ?>
             <div class="form-row">
                 <div class="form-group">
                     <label for="prenom"><i class="fas fa-user"></i> Prénom <span class="required">*</span></label>

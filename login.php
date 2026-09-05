@@ -85,6 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" action="login.php" onsubmit="return validateForm(this)">
+            <?php echo csrfField(); ?>
             <div class="form-group">
                 <label for="email"><i class="fas fa-envelope"></i> Adresse Email</label>
                 <input type="email" id="email" name="email" class="form-input" placeholder="votre@email.dz" required value="<?php echo isset($_POST['email']) ? h($_POST['email']) : ''; ?>">

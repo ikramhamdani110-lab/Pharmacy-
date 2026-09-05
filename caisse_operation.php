@@ -100,6 +100,7 @@ $history = $stHist->get_result();
                 </div>
             </div>
             <form method="POST" class="close-form">
+                <?php echo csrfField(); ?>
                 <input type="hidden" name="action" value="close">
                 <input type="hidden" name="caisse_id" value="<?php echo $openCaisse['id']; ?>">
                 <div class="form-group">
@@ -116,6 +117,7 @@ $history = $stHist->get_result();
             <div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> Aucune caisse disponible. Contactez l'administrateur.</div>
             <?php else: ?>
             <form method="POST">
+                <?php echo csrfField(); ?>
                 <input type="hidden" name="action" value="open">
                 <div class="form-group">
                     <label><i class="fas fa-cash-register"></i> Sélectionner une caisse</label>

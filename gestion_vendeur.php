@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $email = trim($_POST['email']);
     $pass  = $_POST['password'];
     $role  = $_POST['role'];
-    if ($nom && $email && $pass) {
+    if ($nom && filter_var($email, FILTER_VALIDATE_EMAIL) && $pass && in_array($role, array('admin', 'vendeur'), true)) {
         $hash = password_hash($pass, PASSWORD_BCRYPT);
         $stmt = $conn->prepare("INSERT INTO vendeur (nom, email, password, role) VALUES (?,?,?,?)");
         $stmt->bind_param("ssss", $nom, $email, $hash, $role);
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $message = "Erreur: " . $conn->error; $msgType = 'danger';
         }
     } else {
-        $message = "Tous les champs sont obligatoires."; $msgType = 'warning';
+        $message = "Nom, email, mot de passe et rôle valides sont obligatoires."; $msgType = 'warning';
     }
 }
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $nom   = trim($_POST['nom']);
     $email = trim($_POST['email']);
     $pass  = $_POST['password'];
-    if ($nom && $email) {
+    if ($nom && filter_var($email, FILTER_VALIDATE_EMAIL)) {
         if (!empty($pass)) {
             $hash = password_hash($pass, PASSWORD_BCRYPT);
             $stmt = $conn->prepare("UPDATE vendeur SET nom=?, email=?, password=? WHERE id=?");
@@ -128,6 +128,7 @@ $totalPages = ceil($totalRows / $perPage);
         <div class="section-card">
             <div class="section-card-header"><h2><i class="fas fa-user-plus"></i> Ajouter un vendeur</h2></div>
             <form method="POST" class="inline-form">
+                <?php echo csrfField(); ?>
                 <input type="hidden" name="action" value="add">
                 <div class="form-row">
                     <div class="form-group"><label>Nom</label><input type="text" name="nom" class="form-input" required></div>
@@ -203,6 +204,7 @@ $totalPages = ceil($totalRows / $perPage);
 
 <!-- Delete form -->
 <form method="POST" id="delete-form-vendeur" style="display:none">
+    <?php echo csrfField(); ?>
     <input type="hidden" name="action" value="delete">
     <input type="hidden" name="id" id="delete-id-vendeur">
 </form>
@@ -212,6 +214,7 @@ $totalPages = ceil($totalRows / $perPage);
     <div class="modal">
         <div class="modal-header"><h3><i class="fas fa-edit"></i> Modifier le vendeur</h3><button onclick="closeModal('editModal')" class="modal-close">&times;</button></div>
         <form method="POST">
+            <?php echo csrfField(); ?>
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="id" id="edit-id">
             <div class="form-group"><label>Nom</label><input type="text" name="nom" id="edit-nom" class="form-input" required></div>

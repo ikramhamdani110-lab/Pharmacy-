@@ -29,16 +29,74 @@ while ($row = mysqli_fetch_assoc($catResult)) {
 
 <section class="hero">
     <div class="hero-content">
-        <h1><i class="fas fa-pills"></i> PharmaSanté</h1>
-        <p>Votre santé, notre priorité</p>
-        <div class="hero-btns">
-            <a href="register_patient.php" class="btn btn-white"><i class="fas fa-user-plus"></i> S'inscrire</a>
-            <a href="login.php" class="btn btn-outline-white"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+        <div class="hero-copy">
+            <div class="eyebrow"><i class="fas fa-heartbeat"></i> Santé digitale</div>
+            <h1><i class="fas fa-pills"></i> Votre pharmacie, pensée pour mieux soigner.</h1>
+            <p>Accédez à une expérience moderne pour retrouver les médicaments, suivre votre santé et gérer efficacement les besoins de votre famille.</p>
+            <div class="hero-btns">
+                <a href="register_patient.php" class="btn btn-white"><i class="fas fa-user-plus"></i> S'inscrire</a>
+                <a href="login.php" class="btn btn-outline-white"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+            </div>
+            <div class="hero-pills">
+                <span><i class="fas fa-shield-alt"></i> Sécurité</span>
+                <span><i class="fas fa-clock"></i> Service rapide</span>
+                <span><i class="fas fa-stethoscope"></i> Conseils</span>
+            </div>
+        </div>
+        <div class="hero-panel">
+            <div class="hero-panel-card">
+                <div class="section-card-header" style="margin-bottom: 0; border-bottom: 0; padding-bottom: 0;">
+                    <h2 style="color: #fff; font-size: 1rem; margin: 0;">PharmaSanté</h2>
+                    <span class="badge badge-success" style="background: rgba(16,185,129,0.18); color: #ccfbf1; border: 1px solid rgba(255,255,255,.08);">En ligne</span>
+                </div>
+                <div class="hero-stat-grid">
+                    <div class="hero-stat">
+                        <strong>250+</strong>
+                        <span>Médicaments</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>24/7</strong>
+                        <span>Disponibilité</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>3.8k</strong>
+                        <span>Patients</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>98%</strong>
+                        <span>Satisfaction</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <main class="container">
+    <section class="feature-strip">
+        <div class="feature-item">
+            <i class="fas fa-notes-medical"></i>
+            <div>
+                <strong>Prescription claire</strong>
+                <span>Informations faciles à lire et exploiter</span>
+            </div>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-shield-heart"></i>
+            <div>
+                <strong>Produits de confiance</strong>
+                <span>Un catalogue fiable et contrôlé</span>
+            </div>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-chart-line"></i>
+            <div>
+                <strong>Suivi intelligent</strong>
+                <span>Des ventes et achats plus transparents</span>
+            </div>
+        </div>
+    </section>
+
     <section class="medicines-section">
         <h2 class="section-title"><i class="fas fa-capsules"></i> Nos Médicaments</h2>
         <div class="search-filter-bar">

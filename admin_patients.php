@@ -99,6 +99,7 @@ if ($search) {
 </div>
 
 <form method="POST" id="delete-form-patient" style="display:none">
+    <?php echo csrfField(); ?>
     <input type="hidden" name="action" value="delete">
     <input type="hidden" name="id" id="delete-id-patient">
 </form>

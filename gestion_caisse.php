@@ -91,6 +91,7 @@ if ($search) {
         <div class="section-card">
             <div class="section-card-header"><h2><i class="fas fa-plus"></i> Ajouter une caisse</h2></div>
             <form method="POST" class="inline-form">
+                <?php echo csrfField(); ?>
                 <input type="hidden" name="action" value="add">
                 <div class="form-row">
                     <div class="form-group"><label>Nom de la caisse</label><input type="text" name="nom" class="form-input" placeholder="Ex: Caisse Principale" required></div>
@@ -139,6 +140,7 @@ if ($search) {
 </div>
 
 <form method="POST" id="delete-form-caisse" style="display:none">
+    <?php echo csrfField(); ?>
     <input type="hidden" name="action" value="delete">
     <input type="hidden" name="id" id="delete-id-caisse">
 </form>
@@ -147,6 +149,7 @@ if ($search) {
     <div class="modal modal-sm">
         <div class="modal-header"><h3><i class="fas fa-edit"></i> Modifier la caisse</h3><button onclick="closeModal('editCaisseModal')" class="modal-close">&times;</button></div>
         <form method="POST">
+            <?php echo csrfField(); ?>
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="id" id="caisse-edit-id">
             <div class="form-group"><label>Nom</label><input type="text" name="nom" id="caisse-edit-nom" class="form-input" required></div>

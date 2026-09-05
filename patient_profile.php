@@ -31,13 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $adresse = trim($_POST['adresse']);
         $dob     = trim($_POST['date_naissance']);
         $dobVal  = $dob ?: null;
-        $stmt = $conn->prepare("UPDATE patient SET prenom=?, nom=?, telephone=?, email=?, adresse=?, date_naissance=? WHERE id=?");
-        $stmt->bind_param("ssssssi", $prenom, $nom, $tel, $email, $adresse, $dobVal, $userId);
-        if ($stmt->execute()) {
+        if (!$prenom || !$nom || !$tel || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $message = "Les informations saisies sont invalides."; $msgType = 'warning';
+        } else {
+            $stmt = $conn->prepare("UPDATE patient SET prenom=?, nom=?, telephone=?, email=?, adresse=?, date_naissance=? WHERE id=?");
+            $stmt->bind_param("ssssssi", $prenom, $nom, $tel, $email, $adresse, $dobVal, $userId);
+            if ($stmt->execute()) {
             $_SESSION['user_name'] = $prenom . ' ' . $nom;
             $message = "Profil mis à jour."; $msgType = 'success';
-        } else {
-            $message = "Erreur: " . $conn->error; $msgType = 'danger';
+            } else {
+                $message = "Erreur: " . $conn->error; $msgType = 'danger';
+            }
         }
     }
     if ($action === 'password') {
@@ -94,6 +98,7 @@ $patient = $stPat->get_result()->fetch_assoc();
         <div class="section-card">
             <div class="section-card-header"><h2><i class="fas fa-id-card"></i> Informations personnelles</h2></div>
             <form method="POST">
+                <?php echo csrfField(); ?>
                 <input type="hidden" name="action" value="update">
                 <div class="form-row">
                     <div class="form-group"><label>Prénom</label><input type="text" name="prenom" class="form-input" value="<?php echo h($patient['prenom']); ?>" required></div>
@@ -117,6 +122,7 @@ $patient = $stPat->get_result()->fetch_assoc();
         <div class="section-card">
             <div class="section-card-header"><h2><i class="fas fa-key"></i> Changer le mot de passe</h2></div>
             <form method="POST">
+                <?php echo csrfField(); ?>
                 <input type="hidden" name="action" value="password">
                 <div class="form-group"><label>Mot de passe actuel</label><input type="password" name="current_password" class="form-input" required></div>
                 <div class="form-row">

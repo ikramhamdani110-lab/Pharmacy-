@@ -63,14 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $notes     = trim($_POST['notes']);
 
     if ($patientId && $medId && $quantite > 0) {
-        $stMed = $conn->prepare("SELECT * FROM medicament WHERE id=?");
+        $conn->begin_transaction();
+        $stMed = $conn->prepare("SELECT * FROM medicament WHERE id=? FOR UPDATE");
         $stMed->bind_param("i", $medId);
         $stMed->execute();
         $med = $stMed->get_result()->fetch_assoc();
 
         if (!$med) {
+            $conn->rollback();
             $message = "Médicament introuvable."; $msgType = 'danger';
         } elseif ($med['quantite_stock'] < $quantite) {
+            $conn->rollback();
             $message = "Stock insuffisant. Stock disponible: " . $med['quantite_stock']; $msgType = 'warning';
         } else {
             $prixU = $med['prix_dinar'];
@@ -82,24 +85,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stInsert->execute()) {
                 $stStock = $conn->prepare("UPDATE medicament SET quantite_stock = quantite_stock - ? WHERE id=?");
                 $stStock->bind_param("ii", $quantite, $medId);
-                $stStock->execute();
+                if (!$stStock->execute() || $stStock->affected_rows !== 1) {
+                    $conn->rollback();
+                    $message = "La vente n'a pas pu être enregistrée."; $msgType = 'danger';
+                } else {
+                    $conn->commit();
 
-                $stPat = $conn->prepare("SELECT * FROM patient WHERE id=?");
-                $stPat->bind_param("i", $patientId);
-                $stPat->execute();
-                $patient = $stPat->get_result()->fetch_assoc();
+                    $stPat = $conn->prepare("SELECT * FROM patient WHERE id=?");
+                    $stPat->bind_param("i", $patientId);
+                    $stPat->execute();
+                    $patient = $stPat->get_result()->fetch_assoc();
 
-                $receipt = array(
-                    'patient' => $patient['prenom'] . ' ' . $patient['nom'],
-                    'medicament' => $med['nom'],
-                    'quantite' => $quantite,
-                    'prix_unitaire' => $prixU,
-                    'total' => $total,
-                    'caisse' => $openCaisse['nom'],
-                    'date' => date('d/m/Y H:i')
-                );
-                $message = "Vente enregistrée avec succès!"; $msgType = 'success';
+                    $receipt = array(
+                        'patient' => $patient['prenom'] . ' ' . $patient['nom'],
+                        'medicament' => $med['nom'],
+                        'quantite' => $quantite,
+                        'prix_unitaire' => $prixU,
+                        'total' => $total,
+                        'caisse' => $openCaisse['nom'],
+                        'date' => date('d/m/Y H:i')
+                    );
+                    $message = "Vente enregistrée avec succès!"; $msgType = 'success';
+                }
             } else {
+                $conn->rollback();
                 $message = "Erreur: " . $conn->error; $msgType = 'danger';
             }
         }
@@ -160,6 +169,7 @@ $preMed     = intval($_GET['medicament_id'] ?? 0);
         <div class="section-card">
             <div class="section-card-header"><h2><i class="fas fa-file-invoice"></i> Formulaire de vente</h2></div>
             <form method="POST" id="venteForm">
+                <?php echo csrfField(); ?>
                 <div class="form-row">
                     <div class="form-group">
                         <label><i class="fas fa-user"></i> Patient *

@@ -99,6 +99,21 @@ function toggleMobileMenu() {
     if (sidebar) sidebar.classList.toggle('open');
 }
 
+document.addEventListener('click', function(e) {
+    var nav = document.getElementById('mainNav');
+    var hamburger = document.querySelector('.hamburger');
+    if (!nav || !hamburger) return;
+    var clickedInsideNav = nav.contains(e.target);
+    var clickedOnHamburger = hamburger.contains(e.target);
+    if (!clickedInsideNav && !clickedOnHamburger && nav.classList.contains('open')) {
+        nav.classList.remove('open');
+    }
+    var sidebar = document.querySelector('.sidebar');
+    if (sidebar && !sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+    }
+});
+
 /* ============================================================
    8. VALIDATE FORM
    ============================================================ */

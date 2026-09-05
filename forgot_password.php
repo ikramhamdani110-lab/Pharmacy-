@@ -96,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <?php else: ?>
         <form method="POST" action="forgot_password.php">
+            <?php echo csrfField(); ?>
             <div class="form-group">
                 <label for="email"><i class="fas fa-envelope"></i> Adresse Email</label>
                 <input type="email" id="email" name="email" class="form-input"

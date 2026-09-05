@@ -29,14 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = trim($_POST['email']);
         $dob   = trim($_POST['date_naissance']);
         $adresse= trim($_POST['adresse']);
-        $pass  = password_hash('patient123', PASSWORD_BCRYPT);
-        if ($nom && $prenom && $tel && $email) {
+        if ($nom && $prenom && $tel && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $temporaryPassword = bin2hex(random_bytes(6));
+            $pass = password_hash($temporaryPassword, PASSWORD_BCRYPT);
             $dobVal = $dob ?: null;
             $stmt = $conn->prepare("INSERT INTO patient (nom, prenom, telephone, email, password, adresse, date_naissance) VALUES (?,?,?,?,?,?,?)");
             $stmt->bind_param("sssssss", $nom, $prenom, $tel, $email, $pass, $adresse, $dobVal);
-            if ($stmt->execute()) { $message = "Patient ajouté. Mot de passe par défaut: patient123"; $msgType = 'success'; }
-            else { $message = "Erreur (email existant?): " . $conn->error; $msgType = 'danger'; }
-        } else { $message = "Champs obligatoires manquants."; $msgType = 'warning'; }
+            if ($stmt->execute()) { $message = "Patient ajouté. Mot de passe temporaire: " . $temporaryPassword; $msgType = 'success'; }
+            else { $message = "Impossible d'ajouter le patient. Vérifiez que l'email n'est pas déjà utilisé."; $msgType = 'danger'; }
+        } else { $message = "Nom, prénom, téléphone et email valides sont obligatoires."; $msgType = 'warning'; }
     }
     if ($action === 'edit') {
         $id   = intval($_POST['id']);
@@ -44,10 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tel  = trim($_POST['telephone']); $email = trim($_POST['email']);
         $dob  = trim($_POST['date_naissance']); $adresse = trim($_POST['adresse']);
         $dobVal = $dob ?: null;
-        $stmt = $conn->prepare("UPDATE patient SET nom=?, prenom=?, telephone=?, email=?, adresse=?, date_naissance=? WHERE id=?");
-        $stmt->bind_param("ssssssi", $nom, $prenom, $tel, $email, $adresse, $dobVal, $id);
-        if ($stmt->execute()) { $message = "Patient modifié."; $msgType = 'success'; }
-        else { $message = "Erreur: " . $conn->error; $msgType = 'danger'; }
+        if (!$nom || !$prenom || !$tel || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $message = "Les informations du patient sont invalides."; $msgType = 'warning';
+        } else {
+            $stmt = $conn->prepare("UPDATE patient SET nom=?, prenom=?, telephone=?, email=?, adresse=?, date_naissance=? WHERE id=?");
+            $stmt->bind_param("ssssssi", $nom, $prenom, $tel, $email, $adresse, $dobVal, $id);
+            if ($stmt->execute()) { $message = "Patient modifié."; $msgType = 'success'; }
+            else { $message = "Impossible de modifier le patient. Vérifiez les informations saisies."; $msgType = 'danger'; }
+        }
     }
     if ($action === 'delete') {
         $id = intval($_POST['id']);
@@ -91,6 +96,7 @@ if ($search) {
         <div class="section-card">
             <div class="section-card-header"><h2><i class="fas fa-user-plus"></i> Ajouter un patient</h2></div>
             <form method="POST">
+                <?php echo csrfField(); ?>
                 <input type="hidden" name="action" value="add">
                 <div class="form-row">
                     <div class="form-group"><label>Prénom *</label><input type="text" name="prenom" class="form-input" required></div>
@@ -148,6 +154,7 @@ if ($search) {
 </div>
 
 <form method="POST" id="delete-form-pat" style="display:none">
+    <?php echo csrfField(); ?>
     <input type="hidden" name="action" value="delete">
     <input type="hidden" name="id" id="delete-id-pat">
 </form>
@@ -156,6 +163,7 @@ if ($search) {
     <div class="modal">
         <div class="modal-header"><h3><i class="fas fa-edit"></i> Modifier le patient</h3><button onclick="closeModal('editPatModal')" class="modal-close">&times;</button></div>
         <form method="POST">
+            <?php echo csrfField(); ?>
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="id" id="pat-edit-id">
             <div class="form-row">

@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenData) {
         </div>
         <form method="POST" action="reset_password.php?token=<?php echo h($token); ?>"
               onsubmit="return validateResetForm(this)">
+            <?php echo csrfField(); ?>
             <div class="form-group" style="margin-bottom:16px;">
                 <label for="password"><i class="fas fa-lock"></i> Nouveau mot de passe <span class="required">*</span></label>
                 <div class="input-icon-right">

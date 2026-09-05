@@ -16,8 +16,19 @@ function generateCsrfToken() {
 }
 
 function verifyCsrfToken($token) {
-    if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
-        die("Erreur CSRF. Veuillez recharger la page.");
+    if (!isset($_SESSION['csrf_token']) || !is_string($token) || !hash_equals($_SESSION['csrf_token'], $token)) {
+        http_response_code(403);
+        die("Requête refusée. Veuillez recharger la page.");
+    }
+}
+
+function csrfField() {
+    return '<input type="hidden" name="csrf_token" value="' . h(generateCsrfToken()) . '">';
+}
+
+function verifyPostCsrf() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        verifyCsrfToken($_POST['csrf_token'] ?? '');
     }
 }
 
@@ -108,4 +119,6 @@ function alert($type, $message) {
     }
     return '<div class="alert alert-' . $type . '">' . $icon . ' ' . h($message) . '</div>';
 }
+
+verifyPostCsrf();
 ?>

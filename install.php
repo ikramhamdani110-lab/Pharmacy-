@@ -45,10 +45,15 @@
 </head>
 <body>
 <?php
-$host   = 'localhost';
-$user   = 'root';
-$pass   = '';
-$dbname = 'pharmacare_db';
+$host   = getenv('PHARMA_DB_HOST') ?: 'localhost';
+$user   = getenv('PHARMA_DB_USER') ?: 'root';
+$pass   = getenv('PHARMA_DB_PASSWORD') ?: '';
+$dbname = getenv('PHARMA_DB_NAME') ?: 'pharmacare_db';
+
+if (getenv('PHARMA_ALLOW_INSTALL') !== '1') {
+    http_response_code(404);
+    exit('Not found');
+}
 
 $steps   = [];
 $errors  = [];

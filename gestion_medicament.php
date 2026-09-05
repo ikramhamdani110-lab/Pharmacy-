@@ -44,10 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $prix  = floatval($_POST['prix_dinar']);
         $stock = intval($_POST['quantite_stock']);
         $cat   = trim($_POST['categorie']);
-        $stmt  = $conn->prepare("UPDATE medicament SET nom=?, description=?, prix_dinar=?, quantite_stock=?, categorie=? WHERE id=?");
-        $stmt->bind_param("ssdiis", $nom, $desc, $prix, $stock, $cat, $id);
-        if ($stmt->execute()) { $message = "Médicament modifié."; $msgType = 'success'; }
-        else { $message = "Erreur: " . $conn->error; $msgType = 'danger'; }
+        if (!$nom || $prix < 0 || $stock < 0) {
+            $message = "Nom, prix et stock doivent être valides."; $msgType = 'warning';
+        } else {
+            $stmt  = $conn->prepare("UPDATE medicament SET nom=?, description=?, prix_dinar=?, quantite_stock=?, categorie=? WHERE id=?");
+            $stmt->bind_param("ssdiis", $nom, $desc, $prix, $stock, $cat, $id);
+            if ($stmt->execute()) { $message = "Médicament modifié."; $msgType = 'success'; }
+            else { $message = "Erreur: " . $conn->error; $msgType = 'danger'; }
+        }
     }
 
     if ($action === 'delete') {
@@ -107,6 +111,7 @@ $totalPages = ceil($totalRows / $perPage);
         <div class="section-card">
             <div class="section-card-header"><h2><i class="fas fa-plus"></i> Ajouter un médicament</h2></div>
             <form method="POST" class="inline-form">
+                <?php echo csrfField(); ?>
                 <input type="hidden" name="action" value="add">
                 <div class="form-row">
                     <div class="form-group"><label>Nom</label><input type="text" name="nom" class="form-input" required></div>
@@ -178,6 +183,7 @@ $totalPages = ceil($totalRows / $perPage);
 </div>
 
 <form method="POST" id="delete-form-med" style="display:none">
+    <?php echo csrfField(); ?>
     <input type="hidden" name="action" value="delete">
     <input type="hidden" name="id" id="delete-id-med">
 </form>
@@ -186,6 +192,7 @@ $totalPages = ceil($totalRows / $perPage);
     <div class="modal">
         <div class="modal-header"><h3><i class="fas fa-edit"></i> Modifier le médicament</h3><button onclick="closeModal('editMedModal')" class="modal-close">&times;</button></div>
         <form method="POST">
+            <?php echo csrfField(); ?>
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="id" id="med-edit-id">
             <div class="form-row">
