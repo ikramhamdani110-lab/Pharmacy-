@@ -1,0 +1,29 @@
+name: Deploy to AlwaysData
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Upload application to AlwaysData
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+
+      - name: Upload application over SFTP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ssh-ikrami08.alwaysdata.net
+          username: ikrami08
+          password: ${{ secrets.ALWAYSDATA_SSH_PASSWORD }}
+          port: 22
+          source: "."
+          target: "/home/ikrami08/www/"
+          strip_components: 0
+          rm: false
+          overwrite: true
+          exclude: ".git/**,.github/**,sql/**,RAPPORT_PHARMASANTE.md"
